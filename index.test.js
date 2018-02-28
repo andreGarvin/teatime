@@ -106,7 +106,7 @@ test('Parses a nested string element to a ndoe object', t => {
 test('appends a html element string that is either a to targeted node object', t => {
     
     t.deepEqual(
-        DOM.append({ nodeName: 'div' }, '<div></div>'),
+        DOM.appendChild({ nodeName: 'div' }, '<div></div>'),
         {
             nodeName: 'div',
             childern: [
@@ -122,7 +122,7 @@ test('appends a html element string that is either a to targeted node object', t
 
 test('appends a node object into a targeted string html element', t => {
     t.is(
-        DOM.append('<div></div>', {
+        DOM.appendChild('<div></div>', {
             nodeName: 'div',
             attributes: {
                 style: {
@@ -138,15 +138,15 @@ test('appends a node object into a targeted string html element', t => {
 
 test('appending a string html element into another targeted html string element', t => {
     t.is(
-        DOM.append('<div></div>', '<a href="https://github.com/andreGarvin/teatime"><h1>TeaTime</h1></a>'),
+        DOM.appendChild('<div></div>', '<a href="https://github.com/andreGarvin/teatime"><h1>TeaTime</h1></a>'),
         '<div><a href="https://github.com/andreGarvin/teatime"><h1>TeaTime</h1></a></div>'
     )
 })
 
 
-test('appeding a node object into another nodeobject', t => {
+test('appending a node object into another nodeobject', t => {
     t.deepEqual(
-        DOM.append({
+        DOM.appendChild({
             nodeName: 'div'
         }, {
             nodeName: 'p',
@@ -168,9 +168,9 @@ test('appeding a node object into another nodeobject', t => {
     )
 })
 
-test('appeding a string html element into a node object but not converting the string into a node object', t => {
+test('appending a string html element into a node object but not converting the string into a node object', t => {
     t.deepEqual(
-        DOM.append({ nodeName: 'div' }, DOM.createElement('div'), false),
+        DOM.appendChild({ nodeName: 'div' }, DOM.createElement('div'), false),
         { nodeName: 'div', childern: ['<div></div>'] }
     )
 })

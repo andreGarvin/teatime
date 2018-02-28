@@ -112,7 +112,7 @@ class teatime {
         return node
     }
     
-    append(trg, entity, convert = true) {
+    appendChild(trg, entity, convert = true) {
 
         // If one is a object and one is a string or viceversa
         if (isObject(trg) && typeof entity === 'string') {
