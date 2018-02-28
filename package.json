@@ -1,0 +1,28 @@
+{
+  "name": "teatime",
+  "version": "0.0.0",
+  "description": "DOM CREATION MY DUDE",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava index.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andreGarvin/teatime.git"
+  },
+  "keywords": [
+    "DOM",
+    "JS",
+    "frontend",
+    "framework"
+  ],
+  "author": "Andre Garvin",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andreGarvin/teatime/issues"
+  },
+  "homepage": "https://github.com/andreGarvin/teatime#readme",
+  "devDependencies": {
+    "ava": "^0.25.0"
+  }
+}
