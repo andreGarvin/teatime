@@ -40,7 +40,7 @@ test('Creates a <div> tag with a child node element <a> tag: Stringify', t => {
 test('Creates a <div> tag with a child node element <p> tag: Objects', t => {
     const p = {
         nodeName: 'p',
-        childern: 'Hello there'
+        children: 'Hello there'
     }, h1 = {
         nodeName: 'h1',
         attributes: {
@@ -49,7 +49,7 @@ test('Creates a <div> tag with a child node element <p> tag: Objects', t => {
                 color: 'blue'
             }
         },
-        childern: [ p ]
+        children: [ p ]
     }
 
     t.is(
@@ -62,9 +62,9 @@ test('Parse the string element to a node object', t => {
     const div = '<div><div>'
     t.deepEqual(
         DOM.parse(div),
-        { nodeName: 'div', attributes: {}, childern: [] }
+        { nodeName: 'div', attributes: {}, children: [] }
     )
-})
+}) 
 
 
 test('Parses a nested string element to a ndoe object', t => {
@@ -79,15 +79,15 @@ test('Parses a nested string element to a ndoe object', t => {
 
     t.deepEqual(divNode, {
         nodeName: 'div',
-        childern: [
+        children: [
             {
                 nodeName: "p",
-                childern: ["Hello, World!"],
+                children: ["Hello, World!"],
                 attributes: {}
             },
             {
                 nodeName: "a",
-                childern: ["google link"],
+                children: ["google link"],
                 attributes: {
                     href: "https://google.com"
                 }
@@ -109,10 +109,10 @@ test('appends a html element string that is either a to targeted node object', t
         DOM.appendChild({ nodeName: 'div' }, '<div></div>'),
         {
             nodeName: 'div',
-            childern: [
+            children: [
                 {
                     nodeName: 'div',
-                    childern: [],
+                    children: [],
                     attributes: {}
                 }
             ]
@@ -156,7 +156,7 @@ test('appending a node object into another nodeobject', t => {
         }),
         {
             nodeName: 'div',
-            childern: [
+            children: [
                 {
                     nodeName: 'p',
                     attributes: {
@@ -171,6 +171,17 @@ test('appending a node object into another nodeobject', t => {
 test('appending a string html element into a node object but not converting the string into a node object', t => {
     t.deepEqual(
         DOM.appendChild({ nodeName: 'div' }, DOM.createElement('div'), false),
-        { nodeName: 'div', childern: ['<div></div>'] }
+        { nodeName: 'div', children: ['<div></div>'] }
     )
+})
+
+
+test('changing the innerHtml of a string element node object adn string', t => {
+    t.plan(2)
+
+    t.is(DOM.innerHtml(DOM.createElement('div', null, 'HEllO'), 'GOODBYE'), '<div>GOODBYE</div>')
+    t.is(DOM.innerHtml(DOM.createElement('div', null, 'HEllO'), {
+        nodeName: 'p',
+        children: [ "I AM A CHILD" ]
+    }), '<div><p>I AM A CHILD</p></div>')
 })

@@ -8,14 +8,14 @@ Math.range = (i, j) => {
 
 class teatime {
 
-    createElement(nodeName, atr, childern) {
+    createElement(nodeName, atr, children) {
         atr = isFalsey(atr) ? {} : atr
-        childern = isFalsey(childern) ? [] : Array.isArray(childern) ? childern : [ childern ]
+        children = isFalsey(children) ? [] : Array.isArray(children) ? children : [ children ]
 
         if (nodeName !== undefined && typeof nodeName === 'string') {
             const newElement = {
                 nodeName,
-                childern,
+                children,
                 attributes: atr,
             }
             
@@ -27,12 +27,12 @@ class teatime {
     
     // stringifies the element object
     stringify(obj, indentation = 3) {
-        obj.childern = Array.isArray(obj.childern) ? obj.childern : [obj.childern]
+        obj.children = Array.isArray(obj.children) ? obj.children : [obj.children]
         
         if (isObject(obj)) {
 
             const attributes = createAttributeString(obj.attributes)
-            const childern = obj.childern
+            const children = obj.children
                 .map(child => {
                     if ( isObject(child) ) {
                         return this.stringify(child, (indentation * indentation))
@@ -44,7 +44,7 @@ class teatime {
             // const childernStr = childern.length !== 0 ? `${ childern[0] === '<' ? ' '.repeat(indentation) : '' }${ childern }` : ''
             return [
                 `<${obj.nodeName}${isFalsey(attributes) ? '' : ' ' + attributes}>`,
-                `${childern}`,
+                `${children}`,
                 `</${obj.nodeName}>`
             ].join('')
         }
@@ -63,7 +63,7 @@ class teatime {
         const DOM = {};
         const node = {
             nodeName: null,
-            childern: [],
+            children: [],
             attributes: {}
         }
 
@@ -79,7 +79,7 @@ class teatime {
                     } else {
                         if (ishtml(line[0])) {
                             const child = deconstructedNode.slice(i, deconstructedNode.indexOf(`/${line[0]}`) + 1)
-                            node.childern.push(
+                            node.children.push(
                                 this.parse(
                                     child,
                                     true
@@ -96,7 +96,7 @@ class teatime {
                             node.nodeName = line
                         } else if (ishtml(line)) {
                             const child = deconstructedNode.slice(i, deconstructedNode.indexOf(`/${line}`) + 1)
-                            node.childern.push(
+                            node.children.push(
                                 this.parse(
                                     child,
                                     true
@@ -104,7 +104,7 @@ class teatime {
                             )
                             deconstructedNode.splice(i, deconstructedNode.indexOf(`/${line}`) - 1)
                         } else if (line[0] !== '/') {
-                            node.childern.push(line.trim())
+                            node.children.push(line.trim())
                         }
                     }
                 }
@@ -118,9 +118,9 @@ class teatime {
         if (isObject(trg) && typeof entity === 'string') {
             entity = convert ? this.parse(entity) : entity
             
-            trg.childern = trg.childern || []
+            trg.children = trg.children || []
             
-            trg.childern.push(entity)
+            trg.children.push(entity)
             return trg
         } else if (typeof trg === 'string' && isObject(entity)) {
             entity = this.stringify(entity)
@@ -139,10 +139,47 @@ class teatime {
                 trg.split('>').slice(-2).join('>')
             ].join('')
         } else if (isObject(trg) && isObject(entity)) {
-            trg.childern = trg.childern || []
-            trg.childern.push(entity)
+            trg.children = trg.children || []
+            trg.children.push(entity)
             return trg
         }
+    }
+
+    innerHtml(element, text) {
+        if (isFalsey(text)) {
+            throw new Error('NO new insert data was given')
+            return; 
+        } else if (isObject(text)) {
+            text = this.stringify(text)
+        }
+
+        const indexRight = returnIndexies(element, '>')
+        const indexLeft = returnIndexies(element, '<')
+
+
+        if (indexLeft.length !== indexRight.length) {
+            throw new Error('Both sides are no the same length')
+            return;
+        }
+
+        const splitedElement = [];
+        for (let i = 0; i < indexLeft.length; i++) {
+            if (indexRight[i - 1] && indexLeft[i]) {
+                if (indexLeft[i] - indexRight[i - 1] !== 1) {
+                    splitedElement.push(
+                        element.slice(indexRight[i - 1] + 1, indexLeft[i])
+                    )
+                }
+            }
+            splitedElement.push(
+                element.slice(indexLeft[i], indexRight[i] + 1)
+            )
+        }
+        return [
+            splitedElement[0],
+            text,
+            splitedElement.slice(-1)[0]
+        ].join('')
     }
 }
 
